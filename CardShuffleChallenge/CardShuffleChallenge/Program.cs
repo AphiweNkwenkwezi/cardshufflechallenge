@@ -14,6 +14,7 @@ namespace CardShuffleChallenge
             var host = AppStartup();
 
             var cardShufflingService = ActivatorUtilities.CreateInstance<CardShufflingService>(host.Services);
+            Log.Information("Application Starting");
             cardShufflingService.Run();
         }
 
@@ -27,8 +28,6 @@ namespace CardShuffleChallenge
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
                 .CreateLogger();
-
-            Log.Logger.Information("Application Starting");
 
             var host = Host.CreateDefaultBuilder()
                 .ConfigureServices((context, services) =>

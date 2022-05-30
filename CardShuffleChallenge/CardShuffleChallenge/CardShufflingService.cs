@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -9,11 +8,9 @@ namespace CardShuffleChallenge
 {
     public class CardShufflingService : ICardShufflingService
     {
-        private readonly ILogger<CardShufflingService> _log;
         private readonly IConfiguration _config;
-        public CardShufflingService(ILogger<CardShufflingService> log, IConfiguration config)
+        public CardShufflingService(IConfiguration config)
         {
-            _log = log;
             _config = config;
         }
 
@@ -22,26 +19,28 @@ namespace CardShuffleChallenge
             string[] suits = _config.GetValue<string>("Suits").Split(',');
             string[] numbers = _config.GetValue<string>("Numbers").Split(',');
 
-            _log.LogInformation("Getting deck of cards");
+            Log.Information("Getting deck of cards");
             var cards = GetCardDeck(suits, numbers);
-
-            _log.LogInformation("Getting deck of cards");
+            
+            Log.Information("Starting - Shuffling deck of cards");
             var shuffledCards = ShuffleCards(cards);
 
             foreach (string card in shuffledCards)
             {
                 Console.WriteLine(card);
             }
+
+            Log.Information("Complete - Shuffling deck of cards");
             Console.ReadLine();
         }
 
-        public static string[] ShuffleCards(string[] cards)
+        public string[] ShuffleCards(string[] cards)
         {
             Random random = new Random();
             return cards.OrderBy(x => random.Next()).ToArray();
         }
 
-        public static string[] GetCardDeck(string[] suits, string[] numbers)
+        public string[] GetCardDeck(string[] suits, string[] numbers)
         {
             List<string> cards = new List<string>();
             foreach (string suit in suits)
